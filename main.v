@@ -1,0 +1,149 @@
+`include "clock.v"
+`include "uart.v"
+`include "dbus.v"
+`default_nettype none
+module uart_dbus_bridge #(
+	parameter c_RXADDRWIDTH = 13,
+	parameter c_TXADDRWIDTH = 3)
+	(
+		input i_clock,
+		input i_rxclock,
+		input i_txclock,
+		input i_rx,
+		output o_tx,
+		inout io_tip,
+		inout io_ring,
+		output o_overrun, o_busy, o_drive, o_receiving
+	);
+	wire w_davail, w_dbusy;
+	wire w_avail, w_txbusy, w_rxoverrun, w_txoverrun;
+	wire [7:0] w_rxdata;
+	wire [7:0] w_ddata;
+	reg [7:0] r_DATA;
+	reg [7:0] r_DDATA;
+	reg r_READ = 1'b0;
+	reg r_DREAD = 1'b0;
+	reg r_AVAIL = 1'b0;
+	reg r_DAVAIL = 1'b0;
+	reg r_DBUSY = 1'b1;
+	reg r_TXBUSY = 1'b1;
+	//RX to DBUS
+	always @ (posedge i_clock)
+		begin
+			if (r_AVAIL && !r_READ && !r_DBUSY)
+				begin
+					r_READ <= 1'b1;
+					r_DATA <= w_rxdata;
+				end
+			if (r_READ && !r_AVAIL)
+				r_READ <= 1'b0;
+			r_AVAIL <= w_avail;
+			r_DBUSY <= w_dbusy;
+		end
+	//DBUS to TX
+	always @ (posedge i_clock)
+		begin
+			if (r_DAVAIL && !r_DREAD && !r_TXBUSY)
+				begin
+					r_DREAD <= 1'b1;
+					r_DDATA <= w_ddata;
+				end
+			if (r_DREAD && !r_DAVAIL)
+				r_DREAD <= 1'b0;
+			r_DAVAIL <= w_davail;
+			r_TXBUSY <= w_txbusy;
+		end
+	assign o_busy = w_dbusy;
+	assign o_overrun = w_rxoverrun || w_txoverrun;
+	uart_rx_3x_fifo #(
+		.c_ADDRWIDTH (c_RXADDRWIDTH)
+	) myuart_rx(
+		.i_clock (i_clock),
+		.i_uartclock (i_rxclock),
+		.i_rx (i_rx),
+		.i_read (r_READ),
+		.o_avail (w_avail),
+		.o_data (w_rxdata),
+		.o_overrun (w_rxoverrun)
+		);
+	uart_tx_fifo #(
+		.c_ADDRWIDTH (c_TXADDRWIDTH)
+	) myuart_tx(
+		.i_clock (i_clock),
+		.i_uartclock (i_txclock),
+		.i_data (r_DDATA),
+		.i_enable (r_DREAD),
+		.o_tx (o_tx),
+		.o_busy (w_txbusy),
+		.o_full (w_txoverrun)
+		);
+	dbus mybus(
+		.i_clock (i_clock),
+		.i_data (r_DATA),
+		.i_enable (r_READ),
+		.i_read (r_DREAD),
+		.io_tip (io_tip),
+		.io_ring (io_ring),
+		.o_data (w_ddata),
+		.o_avail (w_davail),
+		.o_busy (w_dbusy),
+		.o_drive (o_drive),
+		.o_receiving (o_receiving)
+		);
+endmodule
+module main (
+		input i_clock, //main clock input
+		input i_rx, //uart RX
+		output o_tx, //uart TX
+		output o_sleeve, //dbus sleeve. Permanently driven LOW.
+		output o_clock, //debug uart clock output
+		output o_overrun, //debug uart buffer overrun
+		output o_busy, //debug dbus is busy
+		output o_drive, //debug dbus driving the bus
+		output o_receiving, //debug dbus receiving
+		inout io_tip, //dbus tip
+		inout io_ring //dbus ring
+	);
+	wire w_uartclock, w_uart3xclock;
+	freqgen #(
+		.c_IFREQ (`clock),
+		.c_OFREQ (`uartrate)
+	) uartclock (
+		.i_clock (i_clock),
+		.o_clock (w_uartclock)
+		);
+	freqgen #(
+		.c_IFREQ (`clock),
+		.c_OFREQ (`uartrate*3)
+	) uart3xclock (
+		.i_clock (i_clock),
+		.o_clock (w_uart3xclock)
+		);
+	//wire w_slowclock;
+	//freqgen #(
+		//.c_IFREQ (`clock),
+		//.c_OFREQ (2000000)
+	//) slowclock (
+		//.i_clock (i_clock),
+		//.o_clock (w_slowclock)
+		//);
+	wire w_busy, w_tx, w_aux, w_aux2;
+	uart_dbus_bridge #(
+		.c_RXADDRWIDTH(`uartrxbufpow2),
+		.c_TXADDRWIDTH(`uarttxbufpow2)
+	) mybridge(
+		.i_clock (i_clock),
+		.i_rxclock (w_uart3xclock),
+		.i_rx (i_rx),
+		.i_txclock (w_uartclock),
+		.o_tx (o_tx),
+		.io_tip (io_tip),
+		.io_ring (io_ring),
+		.o_busy (o_busy),
+		.o_drive (o_drive),
+		.o_receiving (o_receiving),
+		.o_overrun (o_overrun)
+		);
+	assign o_clock = w_uartclock;
+	assign o_sleeve = 1'b0;
+endmodule

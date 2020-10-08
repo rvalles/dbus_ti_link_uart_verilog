@@ -1,0 +1,11 @@
+set_io i_clock B2
+set_io i_rx B1 #3
+set_io o_tx C2 #4
+set_io io_tip H1 #11
+set_io io_ring J1 #12
+set_io o_sleeve H2 #13 Always LOW
+set_io o_busy B3 #onboard LED
+set_io o_clock H9 #14
+set_io o_drive D9 #15
+set_io o_overrun D8 #16
+set_io o_receiving C9 #17

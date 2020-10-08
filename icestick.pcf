@@ -1,0 +1,11 @@
+set_io i_clock 21
+set_io i_rx 9 #FTDI RX
+set_io o_tx 8 #FTDI TX
+set_io io_tip 60
+set_io io_ring 61
+set_io o_sleeve 62 #Always LOW
+set_io o_overrun 99 #LED d1
+set_io o_receiving 98 #LED d2
+set_io o_clock 97 #LED d3
+set_io o_drive 96 #LED d4
+set_io o_busy 95 #LED d5
