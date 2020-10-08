@@ -1,0 +1,6 @@
+*.iv
+*.blif
+*.json
+*.txt
+*.bin
+*.log
