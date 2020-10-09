@@ -5,16 +5,16 @@ Use FPGA of choice to link a UART with a TI calculator.
 Features
 * Should work with all TI calculators featuring TI Link.
   * Tested with TI-89 (HW2) and TI Voyage 200 (HW2).
+* Fast. Faster than official cables. Fastest. Calculator as bottleneck.
+  * ~9.6KB/s from TI-89 (stock) with FPGA running dbus at 8MHz.
 * Verilog 2005.
   * No dependency on vendor libraries.
   * Made for yosys+nextpnr open fpga flow.
+  * Tested on iCE40 HX/LP FPGAs.
 * Custom dbus and uart implementations.
 * Ring FIFO buffer in both directions.
   * Buffer infers FPGA-specific dual port RAM.
-* Parametrized UART speed, FPGA clock, buffer sizes.
-* Tested on iCE40 HX/LP FPGAs.
-* Fast. Faster than official cables. Fastest. Calculator as bottleneck.
-  * ~9.6KB/s from TI-89 (stock) with FPGA running dbus at 8MHz.
+* Parametrized UART speed, DBus clock, FPGA clock, buffer sizes.
 * MIT license. Refer to LICENSE file.
 
 Tested FPGA boards
