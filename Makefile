@@ -1,7 +1,7 @@
 uartrate = 115200
 #icestick
 programmer=iceprog
-pcf = icestick.pcf
+pcf = boards/icestick/icestick.pcf
 chip = hx1k
 package = tq144
 MHz = 12
@@ -10,7 +10,7 @@ uartrxbufpow2=13
 uarttxbufpow2=3
 #tinyfpga bx
 # programmer=tinyprog
-# pcf = tinyfpga_bx.pcf
+# pcf = boards/tinyfpga_bx/tinyfpga_bx.pcf
 # chip = lp8k
 # package = cm81
 # MHz = 16
