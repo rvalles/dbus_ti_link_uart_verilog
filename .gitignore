@@ -4,3 +4,5 @@
 *.txt
 *.bin
 *.log
+*.kate-swp
+*~
