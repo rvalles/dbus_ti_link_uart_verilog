@@ -1,22 +1,6 @@
+board = icestick
+include boards/$(board)/Makefile
 uartrate = 115200
-#icestick
-programmer=iceprog
-pcf = boards/icestick/icestick.pcf
-chip = hx1k
-package = tq144
-MHz = 12
-dbusMHz = 6
-uartrxbufpow2=13
-uarttxbufpow2=3
-#tinyfpga bx
-# programmer=tinyprog
-# pcf = boards/tinyfpga_bx/tinyfpga_bx.pcf
-# chip = lp8k
-# package = cm81
-# MHz = 16
-# dbusMHz = 8
-# uartrxbufpow2=14
-# uarttxbufpow2=3
 nextpnr_flags = #-r
 iverilog_flags = -g2005 -Wall
 icetime_flags = -d $(chip) -P $(package)

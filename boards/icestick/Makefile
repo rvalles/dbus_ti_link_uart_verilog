@@ -1,0 +1,8 @@
+programmer=iceprog
+pcf = boards/icestick/icestick.pcf
+chip = hx1k
+package = tq144
+MHz = 12
+dbusMHz = 6
+uartrxbufpow2=13
+uarttxbufpow2=3

@@ -1,0 +1,8 @@
+programmer=tinyprog
+pcf = boards/tinyfpga_bx/tinyfpga_bx.pcf
+chip = lp8k
+package = cm81
+MHz = 16
+dbusMHz = 8
+uartrxbufpow2=14
+uarttxbufpow2=3
