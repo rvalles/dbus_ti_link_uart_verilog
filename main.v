@@ -119,20 +119,25 @@ module main (
 		.i_clock (i_clock),
 		.o_clock (w_uart3xclock)
 		);
-	//wire w_slowclock;
-	//freqgen #(
-		//.c_IFREQ (`clock),
-		//.c_OFREQ (2000000)
-	//) slowclock (
-		//.i_clock (i_clock),
-		//.o_clock (w_slowclock)
-		//);
-	wire w_busy, w_tx, w_aux, w_aux2;
+`ifdef dbusclock
+	wire w_dbusclock;
+	freqgen #(
+		.c_IFREQ (`clock),
+		.c_OFREQ (`dbusclock)
+	) dbusclock (
+		.i_clock (i_clock),
+		.o_clock (w_dbusclock)
+		);
+`endif
 	uart_dbus_bridge #(
 		.c_RXADDRWIDTH(`uartrxbufpow2),
 		.c_TXADDRWIDTH(`uarttxbufpow2)
 	) mybridge(
+`ifdef dbusclock
+		.i_clock (w_dbusclock),
+`else
 		.i_clock (i_clock),
+`endif
 		.i_rxclock (w_uart3xclock),
 		.i_rx (i_rx),
 		.i_txclock (w_uartclock),

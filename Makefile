@@ -1,11 +1,11 @@
 uartrate = 115200
-#uartrate = 1000000
 #icestick
 programmer=iceprog
 pcf = icestick.pcf
 chip = hx1k
 package = tq144
 MHz = 12
+dbusMHz = 6
 uartrxbufpow2=13
 uarttxbufpow2=3
 #tinyfpga bx
@@ -14,12 +14,16 @@ uarttxbufpow2=3
 # chip = lp8k
 # package = cm81
 # MHz = 16
+# dbusMHz = 8
 # uartrxbufpow2=14
 # uarttxbufpow2=3
 nextpnr_flags = #-r
 iverilog_flags = -g2005 -Wall
 icetime_flags = -d $(chip) -P $(package)
 synth_macros = -Duartrate=$(uartrate) -Dclock=$(MHz)000000 -Duartrxbufpow2=$(uartrxbufpow2) -Duarttxbufpow2=$(uarttxbufpow2)
+ifdef dbusMHz
+synth_macros += -Ddbusclock=$(dbusMHz)000000
+endif
 nextpnr_target = --$(chip) --package $(package)
 yosys_synthflags = -abc2
 .PHONY: all
