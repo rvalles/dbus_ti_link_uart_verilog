@@ -56,3 +56,12 @@ endif
 ifeq ($(programmer),tinyprog)
 	tinyprog --pyserial -p main.bin
 endif
+.PHONY: warmboot
+warmboot:
+	@echo "***** Warm boot..."
+ifeq ($(programmer),iceprog)
+	iceprog -t
+endif
+ifeq ($(programmer),tinyprog)
+	tinyprog -b
+endif
