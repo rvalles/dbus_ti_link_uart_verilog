@@ -16,7 +16,7 @@ module uart_dbus_bridge #(
 		output o_overrun, o_busy, o_drive, o_receiving
 	);
 	wire w_davail, w_dbusy;
-	wire w_avail, w_txbusy, w_rxoverrun, w_txoverrun;
+	wire w_avail, w_txbusy, w_rxoverrun, w_txfull;
 	wire [7:0] w_rxdata;
 	wire [7:0] w_ddata;
 	reg [7:0] r_DATA;
@@ -27,6 +27,7 @@ module uart_dbus_bridge #(
 	reg r_DAVAIL = 1'b0;
 	reg r_DBUSY = 1'b1;
 	reg r_TXBUSY = 1'b1;
+	reg r_TXFULL = 1'b1;
 	//RX to DBUS
 	always @ (posedge i_clock)
 		begin
@@ -52,9 +53,10 @@ module uart_dbus_bridge #(
 				r_DREAD <= 1'b0;
 			r_DAVAIL <= w_davail;
 			r_TXBUSY <= w_txbusy;
+			r_TXFULL <= w_txfull;
 		end
 	assign o_busy = w_dbusy;
-	assign o_overrun = w_rxoverrun || w_txoverrun;
+	assign o_overrun = w_rxoverrun;
 	uart_rx_3x_fifo #(
 		.c_ADDRWIDTH (c_RXADDRWIDTH)
 	) myuart_rx(
@@ -75,7 +77,7 @@ module uart_dbus_bridge #(
 		.i_enable (r_DREAD),
 		.o_tx (o_tx),
 		.o_busy (w_txbusy),
-		.o_full (w_txoverrun)
+		.o_full (w_txfull)
 		);
 	dbus mybus(
 		.i_clock (i_clock),

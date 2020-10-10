@@ -109,7 +109,7 @@ module dbus (
 					r_AVAIL <= 1'b0;
 					r_OVERFLOW <= 1'b0;
 				end
-			if (!r_BUSY && (r_READTIP || r_READRING))
+			if (!r_BUSY && !r_AVAIL && (r_READTIP || r_READRING))
 				begin
 					r_RECEIVING <= 1'b1;
 					r_RECVBIT <= 1'b1;
