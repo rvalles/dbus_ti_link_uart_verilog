@@ -1,5 +1,7 @@
 board = icestick
 include boards/$(board)/Makefile
+#override board dbus speed for bad cables / slower calcs.
+# dbusMHz = 4
 uartrate = 115200
 nextpnr_flags = #-r
 iverilog_flags = -g2005 -Wall
