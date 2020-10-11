@@ -6,3 +6,4 @@ MHz = 12
 dbusMHz = 6
 uartrxbufpow2=13
 uarttxbufpow2=3
+uartmirror=y
