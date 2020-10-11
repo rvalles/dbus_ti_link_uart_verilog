@@ -241,7 +241,7 @@ module uart_rx_3x_fifo #(
 		input i_read, //parallel data has been read
 		output [7:0] o_data, //parallel data
 		output o_avail, //data is available
-		output o_overrun, //overrun condition
+		output o_full, //fifo full
 		output o_aux //debug
 	);
 	reg r_RX = 1'b0;
@@ -265,7 +265,7 @@ module uart_rx_3x_fifo #(
 	reg r_BUFNACK = 1'b0;
 	always @(posedge i_clock)
 		begin
-			if (r_UARTAVAIL && !r_UARTNACK)
+			if (r_UARTAVAIL && !r_UARTNACK && !r_FULL && !w_full)
 				begin
 					r_BUFWE <= 1'b1;
 					r_UARTDATA <= w_uartdata;
@@ -304,7 +304,8 @@ module uart_rx_3x_fifo #(
 		end
 	assign o_data = r_BUFDATA;
 	assign o_avail = r_BUFAVAIL;
-	assign o_overrun = r_FULL;
+	//assign o_full = w_full || r_FULL;
+	assign o_full = !r_EMPTY;
 	assign o_aux = r_BUFRE;
 	ram_fifo #(
 		.c_ADDRWIDTH (c_ADDRWIDTH),

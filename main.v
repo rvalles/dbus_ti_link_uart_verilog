@@ -13,10 +13,10 @@ module uart_dbus_bridge #(
 		output o_tx,
 		inout io_tip,
 		inout io_ring,
-		output o_overrun, o_busy, o_drive, o_receiving
+		output o_full, o_busy, o_drive, o_receiving
 	);
 	wire w_davail, w_dbusy;
-	wire w_avail, w_txbusy, w_rxoverrun, w_txfull;
+	wire w_avail, w_txbusy, w_rxfull, w_txfull;
 	wire [7:0] w_rxdata;
 	wire [7:0] w_ddata;
 	reg [7:0] r_DATA;
@@ -56,7 +56,7 @@ module uart_dbus_bridge #(
 			r_TXFULL <= w_txfull;
 		end
 	assign o_busy = w_dbusy;
-	assign o_overrun = w_rxoverrun;
+	assign o_full = w_rxfull;
 	uart_rx_3x_fifo #(
 		.c_ADDRWIDTH (c_RXADDRWIDTH)
 	) myuart_rx(
@@ -66,7 +66,7 @@ module uart_dbus_bridge #(
 		.i_read (r_READ),
 		.o_avail (w_avail),
 		.o_data (w_rxdata),
-		.o_overrun (w_rxoverrun)
+		.o_full (w_rxfull)
 		);
 	uart_tx_fifo #(
 		.c_ADDRWIDTH (c_TXADDRWIDTH)
@@ -97,19 +97,20 @@ module main (
 		input i_clock, //main clock input
 		input i_rx, //uart RX
 		output o_tx, //uart TX
+		output o_cts, //uart RTS
 `ifdef uartmirror
 		output o_auxrx, o_auxtx, o_auxcts, //uart mirror for debug
 `endif
 		output o_sleeve, //dbus sleeve. Permanently driven LOW.
 		output o_clock, //debug uart clock output
-		output o_overrun, //debug uart buffer overrun
+		output o_full, //debug uart buffer full
 		output o_busy, //debug dbus is busy
 		output o_drive, //debug dbus driving the bus
 		output o_receiving, //debug dbus receiving
 		inout io_tip, //dbus tip
 		inout io_ring //dbus ring
 	);
-	wire w_uartclock, w_uart3xclock;
+	wire w_uartclock, w_uart3xclock, w_uartfull;
 	freqgen #(
 		.c_IFREQ (`clock),
 		.c_OFREQ (`uartrate)
@@ -153,8 +154,10 @@ module main (
 		.o_busy (o_busy),
 		.o_drive (o_drive),
 		.o_receiving (o_receiving),
-		.o_overrun (o_overrun)
+		.o_full (w_uartfull)
 		);
+	assign o_full = w_uartfull;
+	assign o_cts = w_uartfull;
 	assign o_clock = w_uartclock;
 	assign o_sleeve = 1'b0;
 	assign w_rx = i_rx;
