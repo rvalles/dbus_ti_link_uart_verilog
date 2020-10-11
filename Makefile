@@ -8,6 +8,9 @@ synth_macros = -Duartrate=$(uartrate) -Dclock=$(MHz)000000 -Duartrxbufpow2=$(uar
 ifdef dbusMHz
 synth_macros += -Ddbusclock=$(dbusMHz)000000
 endif
+ifdef uartmirror
+synth_macros += -Duartmirror=y
+endif
 nextpnr_target = --$(chip) --package $(package)
 yosys_synthflags = -abc2
 .PHONY: all
@@ -23,7 +26,7 @@ main.txt: main.json $(pcf)
 	nextpnr-ice40 --asc main.txt --top main --json main.json --pcf $(pcf) --freq $(MHz) --quiet --log nextpnr.log $(nextpnr_target) $(nextpnr_flags)
 icetime.json: main.txt $(pcf)
 	@echo "***** Timing analysis..."
-	icetime main.txt -p $(pcf) -c $(MHz) -j icetime.json $(icetime_flags)
+	icetime main.txt -c $(MHz) -j icetime.json $(icetime_flags)
 main.bin: main.txt
 	@echo "***** Packing..."
 	icepack main.txt main.bin

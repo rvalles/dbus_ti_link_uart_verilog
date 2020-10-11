@@ -97,6 +97,9 @@ module main (
 		input i_clock, //main clock input
 		input i_rx, //uart RX
 		output o_tx, //uart TX
+`ifdef uartmirror
+		output o_auxrx, o_auxtx, o_auxcts, //uart mirror for debug
+`endif
 		output o_sleeve, //dbus sleeve. Permanently driven LOW.
 		output o_clock, //debug uart clock output
 		output o_overrun, //debug uart buffer overrun
@@ -131,6 +134,7 @@ module main (
 		.o_clock (w_dbusclock)
 		);
 `endif
+	wire w_rx, w_tx, w_cts;
 	uart_dbus_bridge #(
 		.c_RXADDRWIDTH(`uartrxbufpow2),
 		.c_TXADDRWIDTH(`uarttxbufpow2)
@@ -141,9 +145,9 @@ module main (
 		.i_clock (i_clock),
 `endif
 		.i_rxclock (w_uart3xclock),
-		.i_rx (i_rx),
+		.i_rx (w_rx),
 		.i_txclock (w_uartclock),
-		.o_tx (o_tx),
+		.o_tx (w_tx),
 		.io_tip (io_tip),
 		.io_ring (io_ring),
 		.o_busy (o_busy),
@@ -153,4 +157,11 @@ module main (
 		);
 	assign o_clock = w_uartclock;
 	assign o_sleeve = 1'b0;
+	assign w_rx = i_rx;
+	assign o_tx = w_tx;
+`ifdef uartmirror
+	assign o_auxrx = w_rx;
+	assign o_auxtx = w_tx;
+	assign o_auxcts = w_uartfull;
+`endif
 endmodule
