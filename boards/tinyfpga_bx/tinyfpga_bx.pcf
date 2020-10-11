@@ -8,5 +8,6 @@ set_io o_sleeve H2 #13 Always LOW
 set_io -nowarn o_busy B3 #onboard LED
 set_io -nowarn o_clock H9 #14
 set_io -nowarn o_drive D9 #15
-set_io -nowarn o_full D8 #16
+set_io -nowarn o_nearfull D8 #16
 set_io -nowarn o_receiving C9 #17
+set_io -nowarn o_full A9 #18

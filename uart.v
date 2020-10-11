@@ -242,6 +242,7 @@ module uart_rx_3x_fifo #(
 		output [7:0] o_data, //parallel data
 		output o_avail, //data is available
 		output o_full, //fifo full
+		output o_nearfull, //fifo near full
 		output o_aux //debug
 	);
 	reg r_RX = 1'b0;
@@ -257,7 +258,7 @@ module uart_rx_3x_fifo #(
 	reg r_BUFOVERRUN = 1'b0;
 	reg [7:0] r_BUFDATA;
 	wire [7:0] w_rdata;
-	wire w_renable, w_full, w_empty;
+	wire w_renable, w_full, w_nearfull, w_empty;
 	reg r_BUFRE = 1'b0;
 	reg r_BUFWE = 1'b0;
 	reg r_EMPTY = 1'b1;
@@ -265,7 +266,7 @@ module uart_rx_3x_fifo #(
 	reg r_BUFNACK = 1'b0;
 	always @(posedge i_clock)
 		begin
-			if (r_UARTAVAIL && !r_UARTNACK && !r_FULL && !w_full)
+			if (r_UARTAVAIL && !r_UARTNACK)
 				begin
 					r_BUFWE <= 1'b1;
 					r_UARTDATA <= w_uartdata;
@@ -279,7 +280,7 @@ module uart_rx_3x_fifo #(
 			r_RX <= i_rx;
 			r_UARTAVAIL <= w_uartavail;
 			r_UARTOVERRUN <= w_uartoverrun;
-			r_FULL <= w_full;
+			r_FULL <= w_nearfull;
 		end
 	always @(posedge i_clock)
 		begin
@@ -304,8 +305,8 @@ module uart_rx_3x_fifo #(
 		end
 	assign o_data = r_BUFDATA;
 	assign o_avail = r_BUFAVAIL;
-	//assign o_full = w_full || r_FULL;
-	assign o_full = !r_EMPTY;
+	assign o_full = w_full;
+	assign o_nearfull = w_nearfull;
 	assign o_aux = r_BUFRE;
 	ram_fifo #(
 		.c_ADDRWIDTH (c_ADDRWIDTH),
@@ -317,6 +318,7 @@ module uart_rx_3x_fifo #(
 		.i_readen (r_BUFRE),
 		.o_data (w_rdata),
 		.o_full (w_full),
+		.o_nearfull (w_nearfull),
 		.o_empty (w_empty)
 		);
 	uart_rx_3x_buffered myuart_rx_in(
