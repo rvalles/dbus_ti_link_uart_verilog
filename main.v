@@ -104,7 +104,6 @@ module main (
 		output o_auxrx, o_auxtx, o_auxcts, //uart mirror for debug
 `endif
 		output o_sleeve, //dbus sleeve. Permanently driven LOW.
-		output o_clock, //debug uart clock output
 		output o_full, //debug uart buffer full
 		output o_nearfull, //debug uart buffer full or near
 		output o_busy, //debug dbus is busy
@@ -163,7 +162,6 @@ module main (
 	assign o_full = w_uartfull;
 	assign o_cts = w_uartnearfull;
 	assign o_nearfull = w_uartnearfull;
-	assign o_clock = w_uartclock;
 	assign o_sleeve = 1'b0;
 	assign w_rx = i_rx;
 	assign o_tx = w_tx;
