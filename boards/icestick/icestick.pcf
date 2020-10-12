@@ -4,12 +4,12 @@ set_io o_tx 8 #FTDI TX
 set_io o_cts 4 #FTDI CTS
 set_io io_tip 60
 set_io io_ring 61
-set_io o_sleeve 62 #Always LOW
+set_io o_sleeve 62 #Always drives LOW
 set_io -nowarn o_nearfull 99 #LED d1
-set_io -nowarn o_receiving 98 #LED d2
-set_io -nowarn o_clock 97 #LED d3
-set_io -nowarn o_drive 96 #LED d4
-set_io -nowarn o_busy 95 #LED d5
+set_io -nowarn o_dbusreceiving 98 #LED d2
+set_io -nowarn o_dbusreset 97 #LED d3
+set_io -nowarn o_dbusdrive 96 #LED d4
+set_io -nowarn o_dbusbusy 95 #LED d5
 set_io -nowarn o_auxrx 119
 set_io -nowarn o_auxtx 118
 set_io -nowarn o_auxcts 117

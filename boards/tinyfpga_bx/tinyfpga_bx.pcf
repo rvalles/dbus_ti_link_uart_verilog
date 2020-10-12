@@ -4,10 +4,10 @@ set_io o_tx C2 #4
 set_io o_cts C1 #5
 set_io io_tip H1 #11
 set_io io_ring J1 #12
-set_io o_sleeve H2 #13 Always LOW
-set_io -nowarn o_busy B3 #onboard LED
-set_io -nowarn o_clock H9 #14
-set_io -nowarn o_drive D9 #15
+set_io o_sleeve H2 #13 Always drives LOW
+set_io -nowarn o_dbusbusy B3 #onboard LED
+set_io -nowarn o_dbusreset H9 #14
+set_io -nowarn o_dbusdrive D9 #15
 set_io -nowarn o_nearfull D8 #16
-set_io -nowarn o_receiving C9 #17
+set_io -nowarn o_dbusreceiving C9 #17
 set_io -nowarn o_full A9 #18

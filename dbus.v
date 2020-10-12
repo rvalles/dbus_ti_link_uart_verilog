@@ -2,6 +2,7 @@
 `define VOTE3(a,b,c) (a&&b)||(b&&c)||(a&&c)
 module dbus (
 		input i_clock,
+		input i_10khzclock,
 		input [7:0] i_data,
 		input i_enable,
 		input i_read,
@@ -10,6 +11,7 @@ module dbus (
 		output o_avail,
 		output o_drive,
 		output o_receiving,
+		output o_reset,
 		inout io_tip, //0
 		inout io_ring //1
 	);
@@ -44,6 +46,12 @@ module dbus (
 	reg r_AVAIL = 1'b0;
 	reg r_OVERFLOW = 1'b0;
 	reg r_READ = 1'b0;
+	reg r_RESET = 1'b0;
+	always @ (posedge i_10khzclock)
+		begin
+			
+		end
+	assign o_reset = r_RESET;
 	always @ (posedge i_clock)
 		begin
 			//TX
