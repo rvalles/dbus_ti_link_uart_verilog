@@ -53,7 +53,6 @@ Caveats
   * If stuck midbyte, warmboot or powercycle the FPGA.
 
 TODO
-* Optimize nearfull logic in FIFO.
 * Byte timeout in dbus interface.
 * Write some basic link software as an alternative to TILP.
 
