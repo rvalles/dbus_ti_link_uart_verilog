@@ -47,6 +47,7 @@ module ram_fifo #(
 	reg [c_DATAWIDTH-1:0] r_RDATA;
 	reg r_EMPTY = 1'b1;
 	reg r_FULL = 1'b0;
+	reg r_NEARFULL = 1'b0;
 	always @(posedge i_clock)
 		if (i_writeen && !r_FULL)
 			r_WADDR <= r_WADDR+1;
@@ -61,7 +62,10 @@ module ram_fifo #(
 		else
 			r_EMPTY <= w_empty;
 	always @(posedge i_clock)
-		r_NEARFULLDIFF <= r_RADDR - r_WADDR;
+		begin
+			r_NEARFULLDIFF <= r_RADDR - r_WADDR;
+			r_NEARFULL <= !r_EMPTY && (r_NEARFULLDIFF < c_NEARFULLTHRESH);
+		end
 	assign o_full = w_full;
 	assign o_nearfull= w_nearfull;
 	assign o_empty = r_EMPTY;
@@ -72,7 +76,7 @@ module ram_fifo #(
 	//assign w_next3waddr = r_WADDR+3;
 	//assign w_next4waddr = r_WADDR+4;
 	//assign w_nearfull = w_full || (w_next2waddr == r_RADDR) || (w_next3waddr == r_RADDR) || (w_next4waddr == r_RADDR);
-	assign w_nearfull = !w_empty && (r_NEARFULLDIFF < c_NEARFULLTHRESH);
+	assign w_nearfull = r_NEARFULL;
 	assign w_nextraddr = r_RADDR+1;
 	assign w_empty = (r_RADDR == r_WADDR);
 	assign w_fastempty = (w_nextraddr == r_WADDR);
