@@ -1,6 +1,8 @@
 `default_nettype none
 `define VOTE3(a,b,c) (a&&b)||(b&&c)||(a&&c)
-module dbus (
+module dbus #(
+	parameter c_TIMEOUT=20000)
+	(
 		input i_clock,
 		input i_10khzclock,
 		input [7:0] i_data,
@@ -15,6 +17,7 @@ module dbus (
 		inout io_tip, //0
 		inout io_ring //1
 	);
+	parameter c_TIMERSIZE = $clog2(c_TIMEOUT);
 	reg [0:7] r_OUTPUTMSG;
 	reg [7:0] r_INPUTMSG;
 	reg [0:7] r_DATA;
@@ -47,11 +50,30 @@ module dbus (
 	reg r_OVERFLOW = 1'b0;
 	reg r_READ = 1'b0;
 	reg r_RESET = 1'b0;
+	reg r_TIMERENABLE = 1'b0;
+	reg r_TIMERENABLED = 1'b0;
+	reg r_TIMERTRIGGERED = 1'b0;
+	reg [c_TIMERSIZE-1:0] r_TIMER = 0;
+	reg [c_TIMERSIZE-1:0] r_TIMERCOUNT = 0;
 	always @ (posedge i_10khzclock)
-		begin
-			
-		end
-	assign o_reset = r_RESET;
+		if (r_TIMERENABLED)
+			if (!r_TIMERENABLE)
+				begin
+					r_TIMERENABLED <= 1'b0;
+					r_TIMERTRIGGERED <= 1'b0;
+				end
+			else
+				if (r_TIMERCOUNT == 0)
+					r_TIMERTRIGGERED <= 1'b1;
+				else
+					r_TIMERCOUNT <= r_TIMERCOUNT-1;
+		else if (r_TIMERENABLE)
+			begin
+				r_TIMERCOUNT <= r_TIMER;
+				r_TIMERENABLED <= 1'b1;
+			end
+	//assign o_reset = r_RESET;
+	assign o_reset = r_TIMERTRIGGERED;
 	always @ (posedge i_clock)
 		begin
 			//TX
@@ -148,6 +170,8 @@ module dbus (
 					r_INPUTMSG <= {r_BIT, r_INPUTMSG[7:1]};
 					r_POS <= r_POS+1;
 					r_WAITACKACK <= 1'b1;
+					r_TIMER <= c_TIMEOUT;
+					r_TIMERENABLE <= 1'b1;
 				end
 			if (r_WAITACKACK && ((r_RING && !r_READTIP) || (r_TIP && !r_READRING)))
 				begin
@@ -158,6 +182,7 @@ module dbus (
 				end
 			if (r_WAITACKRELEASE && !r_READRING && !r_READTIP)
 				begin
+					r_TIMERENABLE <= 1'b0;
 					r_WAITACKRELEASE <= 1'b0;
 					if (r_POS == 8)
 						begin
