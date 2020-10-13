@@ -2,6 +2,8 @@
 
 Use FPGA of choice to link a UART with a TI calculator.
 
+![ti86 with iCEstick](https://b.rvalles.net/unsorted/ti89_icestick_lowres.png)
+
 Features
 * Should work with all TI calculators featuring TI Link.
   * Tested with TI-89 (HW2) and TI Voyage 200 (HW2).
@@ -17,7 +19,7 @@ Features
 * Ring FIFO buffer in both directions.
   * Buffer infers FPGA-specific dual port RAM.
 * Timeout (2s) on dbus bit transfer:
-  * Error signal (grounds both lines for ~300µs) and dbus reset.
+  * Signal error (ground both lines for ~300µs) and dbus reset.
 * MIT license. Refer to LICENSE file.
 
 Tested FPGA boards
