@@ -9,7 +9,6 @@ module uart_dbus_bridge #(
 		input i_clock,
 		input i_rxclock,
 		input i_txclock,
-		input i_10khzclock,
 		input i_rx,
 		output o_tx,
 		inout io_tip,
@@ -84,7 +83,6 @@ module uart_dbus_bridge #(
 		);
 	dbus mybus(
 		.i_clock (i_clock),
-		.i_10khzclock (i_10khzclock),
 		.i_data (r_DATA),
 		.i_enable (r_READ),
 		.i_read (r_DREAD),
@@ -131,14 +129,6 @@ module main (
 		.i_clock (i_clock),
 		.o_clock (w_uart3xclock)
 		);
-	wire w_10khzclock;
-	freqgen #(
-		.c_IFREQ (`clock),
-		.c_OFREQ (10000)
-	) my10khzclock (
-		.i_clock (i_clock),
-		.o_clock (w_10khzclock)
-		);
 `ifdef dbusclock
 	wire w_dbusclock;
 	freqgen #(
@@ -150,6 +140,7 @@ module main (
 		);
 `endif
 	wire w_rx, w_tx, w_cts;
+	wire w_dbusreset;
 	uart_dbus_bridge #(
 		.c_RXADDRWIDTH(`uartrxbufpow2),
 		.c_TXADDRWIDTH(`uarttxbufpow2)
@@ -159,7 +150,6 @@ module main (
 `else
 		.i_clock (i_clock),
 `endif
-		.i_10khzclock (w_10khzclock),
 		.i_rxclock (w_uart3xclock),
 		.i_rx (w_rx),
 		.i_txclock (w_uartclock),
@@ -169,11 +159,12 @@ module main (
 		.o_dbusbusy (o_dbusbusy),
 		.o_dbusdrive (o_dbusdrive),
 		.o_dbusreceiving (o_dbusreceiving),
-		.o_dbusreset (o_dbusreset),
+		.o_dbusreset (w_dbusreset),
 		.o_full (w_uartfull),
 		.o_nearfull (w_uartnearfull)
 		);
 	assign o_full = w_uartfull;
+	assign o_dbusreset = w_dbusreset;
 	assign o_cts = w_uartnearfull;
 	assign o_nearfull = w_uartnearfull;
 	assign o_sleeve = 1'b0;
