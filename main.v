@@ -4,7 +4,8 @@
 `default_nettype none
 module uart_dbus_bridge #(
 	parameter c_RXADDRWIDTH = 13,
-	parameter c_TXADDRWIDTH = 3)
+	parameter c_TXADDRWIDTH = 3,
+	parameter c_DBUSCLOCKFREQ = 4000000)
 	(
 		input i_clock,
 		input i_rxclock,
@@ -81,7 +82,9 @@ module uart_dbus_bridge #(
 		.o_busy (w_txbusy),
 		.o_full (w_txfull)
 		);
-	dbus mybus(
+	dbus #(
+        .c_CLOCKFREQ (c_DBUSCLOCKFREQ)
+	) mybus(
 		.i_clock (i_clock),
 		.i_data (r_DATA),
 		.i_enable (r_READ),
@@ -143,7 +146,8 @@ module main (
 	wire w_dbusreset;
 	uart_dbus_bridge #(
 		.c_RXADDRWIDTH(`uartrxbufpow2),
-		.c_TXADDRWIDTH(`uarttxbufpow2)
+		.c_TXADDRWIDTH(`uarttxbufpow2),
+		.c_DBUSCLOCKFREQ(`dbusclock)
 	) mybridge(
 `ifdef dbusclock
 		.i_clock (w_dbusclock),

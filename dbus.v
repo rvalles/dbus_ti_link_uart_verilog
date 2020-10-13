@@ -2,7 +2,7 @@
 `define VOTE3(a,b,c) (a&&b)||(b&&c)||(a&&c)
 module dbus #(
 	parameter c_TIMEOUT=20000,
-	parameter c_CLOCKFREQ=6000000)
+	parameter c_CLOCKFREQ=4000000)
 	(
 		input i_clock,
 		input [7:0] i_data,
