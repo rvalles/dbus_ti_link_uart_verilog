@@ -1,7 +1,9 @@
 board = icestick
 include boards/$(board)/Makefile
-#override board dbus speed for bad cables / slower calcs.
+#board dbus speed. If commented, it is up to the board Makefile.
+#lower for bad cables / slower calcs.
 # dbusMHz = 4
+#uart rate. Lower when FIFO to calculator is small and hardware flow control is not possible.
 uartrate = 115200
 nextpnr_flags = #-r
 iverilog_flags = -g2005 -Wall
