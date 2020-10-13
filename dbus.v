@@ -167,6 +167,8 @@ module dbus #(
 								r_TIP <= 1'b1;
 							r_SENDBIT <= 1'b0;
 							r_WAITACK <= 1'b1;
+							r_TIMER <= c_TIMEOUT;
+							r_TIMERENABLE <= 1'b1;
 						end
 					if (r_WAITACK)
 						if (r_BIT && r_READTIP)
@@ -174,12 +176,14 @@ module dbus #(
 								r_RING <= 1'b0;
 								r_WAITACK <= 1'b0;
 								r_WAITIDLE <= 1'b1;
+								r_TIMERENABLE <= 1'b0;
 							end
 						else if (!r_BIT && r_READRING)
 							begin
 								r_TIP <= 1'b0;
 								r_WAITACK <= 1'b0;
 								r_WAITIDLE <= 1'b1;
+								r_TIMERENABLE <= 1'b0;
 							end
 					if (r_WAITIDLE)
 						if (r_BIT && !r_READTIP)
@@ -244,9 +248,9 @@ module dbus #(
 					if (r_WAITACKRELEASE && !r_READRING && !r_READTIP)
 						begin
 							r_WAITACKRELEASE <= 1'b0;
+							r_TIMERENABLE <= 1'b0;
 							if (r_POS == 8)
 								begin
-									r_TIMERENABLE <= 1'b0;
 									r_DATA <= r_INPUTMSG;
 									r_AVAIL <= 1'b1;
 									r_BUSY <= 1'b0;
