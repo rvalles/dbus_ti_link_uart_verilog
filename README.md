@@ -6,16 +6,18 @@ Features
 * Should work with all TI calculators featuring TI Link.
   * Tested with TI-89 (HW2) and TI Voyage 200 (HW2).
 * Fast. Faster than official cables. Fastest. Calculator as bottleneck.
-  * ~9.6KB/s from TI-89 (HW2 stock) with FPGA running dbus at 8MHz.
+  * ~77Kbit/s from TI-89 (HW2 stock) with FPGA running dbus at 8MHz.
 * Verilog 2005.
   * No dependency on vendor libraries.
   * Made for yosys+nextpnr open fpga flow.
   * Tested on iCE40 HX/LP FPGAs.
 * Custom dbus and uart implementations.
+* Parametrized UART rate, DBus clock, buffer sizes.
 * Hardware flow control.
 * Ring FIFO buffer in both directions.
   * Buffer infers FPGA-specific dual port RAM.
-* Parametrized UART speed, DBus clock, FPGA clock, buffer sizes.
+* Timeout (2s) on dbus bit transfer:
+  * Error signal (grounds both lines for ~300µs) and dbus reset.
 * MIT license. Refer to LICENSE file.
 
 Tested FPGA boards
@@ -47,13 +49,10 @@ Caveats
 * tilp/libticables2 likes to send files in large packets.
   * Some devboards have buffer size to calculator below 4KB. These will fill faster than can be sent.
   * Flow control takes care of it, and thus it is not an issue.
-  * If flow control is not possible, workaround is to set a slower uart speed in Makefile and in libticables2.
+  * If uart flow control is not possible, workaround is to set a slower uart speed in Makefile and in libticables2.
     * 57600bps is slow enough for m68k calculator models.
-* No timeouts or error detection in the dbus interface.
-  * If stuck midbyte, warmboot or powercycle the FPGA.
 
 TODO
-* Byte timeout in dbus interface.
 * Write some basic link software as an alternative to TILP.
 
 Thanks
