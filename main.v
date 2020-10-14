@@ -174,7 +174,6 @@ module main (
 		.o_nearfull (w_uartnearfull)
 		);
 	assign o_full = w_uartfull;
-	//assign o_full = w_dbusreset;
 	assign o_dbusreset = w_dbusreset;
 	assign o_nearfull = w_uartnearfull;
 	assign o_sleeve = 1'b0;
