@@ -11,6 +11,7 @@ module uart_dbus_bridge #(
 		input i_rxclock,
 		input i_txclock,
 		input i_rx,
+		input i_rts,
 		output o_tx,
 		inout io_tip,
 		inout io_ring,
@@ -78,6 +79,7 @@ module uart_dbus_bridge #(
 		.i_uartclock (i_txclock),
 		.i_data (r_DDATA),
 		.i_enable (r_DREAD),
+		.i_rts (i_rts),
 		.o_tx (o_tx),
 		.o_busy (w_txbusy),
 		.o_full (w_txfull)
@@ -103,9 +105,12 @@ module main (
 		input i_clock, //main clock input
 		input i_rx, //uart RX
 		output o_tx, //uart TX
-		output o_cts, //uart RTS
+`ifdef hwflow
+		input i_rts, //uart RTS
+		output o_cts, //uart CTS
+`endif
 `ifdef uartmirror
-		output o_auxrx, o_auxtx, o_auxcts, //uart mirror for debug
+		output o_auxrx, o_auxtx, o_auxcts, o_auxrts, //uart mirror for debug
 `endif
 		output o_sleeve, //dbus sleeve. Permanently driven LOW.
 		output o_full, //debug uart buffer full
@@ -142,7 +147,7 @@ module main (
 		.o_clock (w_dbusclock)
 		);
 `endif
-	wire w_rx, w_tx, w_cts;
+	wire w_rx, w_tx, w_cts, w_rts;
 	wire w_dbusreset;
 	uart_dbus_bridge #(
 		.c_RXADDRWIDTH(`uartrxbufpow2),
@@ -156,6 +161,7 @@ module main (
 `endif
 		.i_rxclock (w_uart3xclock),
 		.i_rx (w_rx),
+		.i_rts (w_rts),
 		.i_txclock (w_uartclock),
 		.o_tx (w_tx),
 		.io_tip (io_tip),
@@ -168,15 +174,22 @@ module main (
 		.o_nearfull (w_uartnearfull)
 		);
 	assign o_full = w_uartfull;
+	//assign o_full = w_dbusreset;
 	assign o_dbusreset = w_dbusreset;
-	assign o_cts = w_uartnearfull;
 	assign o_nearfull = w_uartnearfull;
 	assign o_sleeve = 1'b0;
 	assign w_rx = i_rx;
 	assign o_tx = w_tx;
+`ifdef hwflow
+	assign o_cts = w_uartnearfull;
+	assign w_rts = i_rts;
+`else
+    assign w_rts = 1'b0;
+`endif
 `ifdef uartmirror
 	assign o_auxrx = w_rx;
 	assign o_auxtx = w_tx;
 	assign o_auxcts = w_uartnearfull;
+	assign o_auxrts = w_rts;
 `endif
 endmodule

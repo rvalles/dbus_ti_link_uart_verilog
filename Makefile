@@ -5,6 +5,8 @@ include boards/$(board)/Makefile
 # dbusMHz = 4
 #uart rate. Lower when FIFO to calculator is small and hardware flow control is not possible.
 uartrate = 115200
+#disable hwflow by commenting to undefine
+hwflow = yes
 nextpnr_flags = #-r
 iverilog_flags = -g2005 -Wall
 icetime_flags = -d $(chip) -P $(package)
@@ -14,6 +16,9 @@ synth_macros += -Ddbusclock=$(dbusMHz)000000
 endif
 ifdef uartmirror
 synth_macros += -Duartmirror=y
+endif
+ifdef hwflow
+synth_macros += -Dhwflow=y
 endif
 nextpnr_target = --$(chip) --package $(package)
 yosys_synthflags = -abc2

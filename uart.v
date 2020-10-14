@@ -96,11 +96,13 @@ module uart_tx_fifo #(
 		input i_uartclock, //UART clock
 		input [7:0] i_data, //UART data to send
 		input i_enable, //UART data enable: i_data is wired
+		input i_rts, //UART RTS: send only if low
 		output o_tx, //UART TX
 		output o_busy, //UART is busy
 		output o_full, o_empty //debug
 	);
 	reg r_ENABLE = 1'b0;
+	reg r_RTS = 1'b1;
 	reg r_DTACK = 1'b0;
 	reg [7:0] r_DATA;
 	reg r_UARTENABLE = 1'b0;
@@ -131,7 +133,7 @@ module uart_tx_fifo #(
 		end
 	always @(posedge i_clock)
 		begin
-			if (!r_EMPTY && !r_UARTENABLE && !r_UARTBUSY && !r_BUFRE && !r_BUFAVAIL)
+			if (!r_EMPTY && !r_UARTENABLE && !r_UARTBUSY && !r_BUFRE && !r_BUFAVAIL && r_RTS)
 				r_BUFRE <= 1'b1;
 			if (r_BUFRE)
 				begin
@@ -148,6 +150,7 @@ module uart_tx_fifo #(
 				r_UARTENABLE <= 1'b0;
 			r_EMPTY <= w_empty;
 			r_UARTBUSY <= w_uartbusy;
+			r_RTS <= !i_rts;
 		end
 	assign o_busy = (r_DTACK || r_FULL);
 	assign o_full = w_full;
