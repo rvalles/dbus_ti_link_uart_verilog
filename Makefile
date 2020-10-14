@@ -7,6 +7,9 @@ include boards/$(board)/Makefile
 uartrate = 115200
 #disable hwflow by commenting to undefine
 hwflow = yes
+#override buffer sizes if desired
+#uartrxbufpow2 = 9
+#uarttxbufpow2 = 9
 nextpnr_flags = #-r
 iverilog_flags = -g2005 -Wall
 icetime_flags = -d $(chip) -P $(package)
