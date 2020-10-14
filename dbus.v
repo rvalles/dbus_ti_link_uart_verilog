@@ -248,9 +248,10 @@ module dbus #(
 					if (r_WAITACKRELEASE && !r_READRING && !r_READTIP)
 						begin
 							r_WAITACKRELEASE <= 1'b0;
-							r_TIMERENABLE <= 1'b0;
 							if (r_POS == 8)
 								begin
+									//timeout supposed to be per bit but done per-byte because simpler.
+									r_TIMERENABLE <= 1'b0;
 									r_DATA <= r_INPUTMSG;
 									r_AVAIL <= 1'b1;
 									r_BUSY <= 1'b0;
