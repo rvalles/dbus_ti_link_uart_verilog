@@ -13,7 +13,7 @@ hwflow = yes
 nextpnr_flags = #-r
 iverilog_flags = -g2005 -Wall
 icetime_flags = -d $(chip) -P $(package)
-synth_macros = -Duartrate=$(uartrate) -Dclock=$(MHz)000000 -Duartrxbufpow2=$(uartrxbufpow2) -Duarttxbufpow2=$(uarttxbufpow2)
+synth_macros = -D$(board)=board -Duartrate=$(uartrate) -Dclock=$(MHz)000000 -Duartrxbufpow2=$(uartrxbufpow2) -Duarttxbufpow2=$(uarttxbufpow2)
 ifdef dbusMHz
 synth_macros += -Ddbusclock=$(dbusMHz)000000
 endif
