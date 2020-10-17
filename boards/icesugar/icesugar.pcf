@@ -1,0 +1,16 @@
+set_io i_clock 35
+set_io i_rx 4 #through stm32
+set_io o_tx 6 #through stm32
+#set_io i_rx 34 #pmod3 top
+#set_io o_tx 31 #pmod3 top
+#set_io -nowarn o_cts 27 #pmod3 top
+#set_io -nowarn i_rts 25 #pmod3 top
+set_io io_tip 43 #pmod2 bottom
+set_io io_ring 38 #pmod2 bottom
+set_io -nowarn o_sleeve 36 #pmod2 bottom
+set_io -nowarn o_dbusbusy 39 #led B
+set_io -nowarn o_nearfull 40 #led R
+set_io -nowarn o_dbusreceiving 41 #led G
+set_io -nowarn o_dbusreset 32 #pmod3 bottom
+set_io -nowarn o_dbusdrive 28 #pmod3 bottom
+set_io -nowarn o_full 26 #pmod3 bottom

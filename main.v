@@ -148,7 +148,7 @@ module main (
 		);
 `endif
 	wire w_rx, w_tx, w_cts, w_rts;
-	wire w_dbusreset;
+	wire w_dbusreset, w_dbusbusy, w_dbusreceiving;
 	uart_dbus_bridge #(
 		.c_RXADDRWIDTH(`uartrxbufpow2),
 		.c_TXADDRWIDTH(`uarttxbufpow2),
@@ -166,16 +166,24 @@ module main (
 		.o_tx (w_tx),
 		.io_tip (io_tip),
 		.io_ring (io_ring),
-		.o_dbusbusy (o_dbusbusy),
+		.o_dbusbusy (w_dbusbusy),
 		.o_dbusdrive (o_dbusdrive),
-		.o_dbusreceiving (o_dbusreceiving),
+		.o_dbusreceiving (w_dbusreceiving),
 		.o_dbusreset (w_dbusreset),
 		.o_full (w_uartfull),
 		.o_nearfull (w_uartnearfull)
 		);
 	assign o_full = w_uartfull;
 	assign o_dbusreset = w_dbusreset;
+`ifdef icesugar //Leds of this board are lit by drive low.
+    assign o_dbusreceiving = w_dbusreceiving?1'b0:1'bZ;
+    assign o_dbusbusy = w_dbusbusy?1'b0:1'bZ;
+	assign o_nearfull = w_uartnearfull?1'b0:1'bZ;
+`else
+    assign o_dbusreceiving = w_dbusreceiving;
+    assign o_dbusbusy = w_dbusbusy;
 	assign o_nearfull = w_uartnearfull;
+`endif
 	assign o_sleeve = 1'b0;
 	assign w_rx = i_rx;
 	assign o_tx = w_tx;
