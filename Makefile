@@ -1,15 +1,15 @@
 board = icestick
 include boards/$(board)/Makefile
 #board dbus speed. If commented, it is up to the board Makefile.
-#lower for bad cables / slower calcs.
-# dbusMHz = 4
-#uart rate. Lower when FIFO to calculator is small and hardware flow control is not possible.
-uartrate = 115200
-#disable hwflow by commenting to undefine
-hwflow = yes
+#safe default for bad cables / slower calcs.
+dbusMHz = 2
+#override uart rate.
+# uartrate = 57600
+#disable hwflow by uncommenting to undefine, overriding board Makefile.
+# undefine hwflow
 #override buffer sizes if desired
-#uartrxbufpow2 = 9
-#uarttxbufpow2 = 9
+# uartrxbufpow2 = 9
+# uarttxbufpow2 = 9
 nextpnr_flags = #-r
 iverilog_flags = -g2005 -Wall
 icetime_flags = -d $(chip) -P $(package)
