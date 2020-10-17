@@ -21,7 +21,8 @@ module ram_dualport_infer #(
 endmodule
 module ram_fifo #(
 	parameter c_ADDRWIDTH = 9, //Has to be 3+ for nearfull to work
-	parameter c_DATAWIDTH = 8)
+	parameter c_DATAWIDTH = 8,
+	parameter c_NEARFULLTHRESH = 1<<(c_ADDRWIDTH-2))
 	(
 		input i_clock,
 		input i_writeen,
@@ -32,7 +33,7 @@ module ram_fifo #(
 		output o_nearfull,
 		output o_empty
 	);
-	parameter c_NEARFULLTHRESH = 1<<(c_ADDRWIDTH-2);
+
 	reg [c_ADDRWIDTH-1:0] r_WADDR = 0;
 	reg [c_ADDRWIDTH-1:0] r_RADDR = 0;
 	reg [c_ADDRWIDTH-1:0] r_NEARFULLDIFF = c_NEARFULLTHRESH;
