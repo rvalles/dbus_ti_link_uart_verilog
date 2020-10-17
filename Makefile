@@ -26,7 +26,18 @@ endif
 nextpnr_target = --$(chip) --package $(package)
 yosys_synthflags = -abc2
 .PHONY: all
-all: main.iv main.json main.txt icetime.json main.bin
+all: banner main.iv main.json main.txt icetime.json main.bin
+.PHONY: banner
+banner:
+	@echo "***** dbus_ti_link_uart_verilog"
+	@echo "***** Roc Vallès i Domènech"
+	@echo "board: $(board)"
+	@echo "UART rate: $(uartrate)"
+ifdef hwflow
+	@echo "UART flow control: RTS/CTS enabled."
+else
+	@echo "UART flow control: Disabled."
+endif
 main.iv: main.v uart.v clock.v ram.v dbus.v
 	@echo "***** Synthetising with iverilog as sanity check..." 
 	iverilog $(synth_macros) $(iverilog_flags) -s main -o main.iv main.v
