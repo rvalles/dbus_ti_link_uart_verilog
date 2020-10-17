@@ -12,7 +12,7 @@ Features
 * Verilog 2005.
   * No dependency on vendor libraries.
   * Made for yosys+nextpnr open fpga flow.
-  * Tested on iCE40 HX/LP FPGAs.
+  * Tested on iCE40 HX/LP/UP FPGAs.
 * Custom dbus and uart implementations.
 * Parametrized UART rate, DBus clock, buffer sizes.
 * Hardware flow control.
@@ -24,13 +24,16 @@ Features
 
 Tested FPGA boards
 * iCEstick
+* iCESugar
+  * This board builtin UART through stm32 does not do RTS/CTS.
+  * UART limited to 57600bps as workaround.
 * TinyFPGA BX
 * (...)
 
 Recommendations
 * TI-89, TI-92+ or Voyage 200 are fast enough to take advantage of this.
-  * These calculators work reliably with dbus running at 8MHz.
-  * Lower end z80 devices might work better with lower dbus rate.
+  * These calculators work reliably with dbus running higher than default, at 8+ MHz.
+  * This is unnecessary. Performance benefits are negligible.
 * Be careful with FPGA i/o pin tolerance. TI dbus is maintained at 3.3v.
 * Edit Makefile to uncomment or add fpga board.
 * Edit board PCF to suit board board and preference.
@@ -39,9 +42,9 @@ Recommendations
 * If using tilp/libticables2:
   * No support for plain uart. Pretend it's a grey cable.
   * Patch grey cable for the uart device/rate/hwflow.
-    * Like this: https://gist.github.com/rvalles/f937889712d24ac6824f1358c936b3e2
+    * Like this (ttyUSB/115200/rtscts): https://gist.github.com/rvalles/f937889712d24ac6824f1358c936b3e2
   * If using an uart without hw flow control support with TILP:
-    * Use this older patch: https://gist.github.com/rvalles/0a7b076810470e8e4e2e0f1662eb70da
+    * Use this alternative patch (ttyACM/57600/noflow): https://gist.github.com/rvalles/0a7b076810470e8e4e2e0f1662eb70da
     * See caveats.
 * If using TI official software:
   * Pretend it's a grey graphlink cable.
@@ -49,7 +52,7 @@ Recommendations
 
 Caveats
 * tilp/libticables2 likes to send files in large packets.
-  * Some devboards have buffer size to calculator below 4KB. These will fill faster than can be sent.
+  * Some devboards will only accomodate a limited size ring buffer to calculator, which will fill faster than can be sent.
   * Flow control takes care of it, and thus it is not an issue.
   * If uart flow control is not possible, workaround is to set a slower uart speed in Makefile and in libticables2.
     * 57600bps is slow enough for m68k calculator models.
