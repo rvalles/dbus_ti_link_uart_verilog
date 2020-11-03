@@ -1,0 +1,20 @@
+set_io i_clock 60
+#set_io i_rx 61 #STM32 TX
+#set_io o_tx 62 #STM32 RX
+set_io i_rx 24 #pmod11 P18
+set_io o_tx 23 #pmod11 P19
+set_io i_rts 20 #pmod11 P22
+set_io o_cts 19 #pmod11 P23
+set_io io_tip 2 #pmod7 P36
+set_io io_ring 7 #pmod7 P33
+set_io o_sleeve 8 #pmod7 P32 Always drives LOW
+set_io -nowarn o_nearfull 56 #LED red
+set_io -nowarn o_dbusreceiving 52 #LED green
+set_io -nowarn o_dbusreset 49 #LED blue
+set_io -nowarn o_dbusdrive 1 #pmod7 P37
+set_io -nowarn o_dbusbusy 55 #LED yellow
+#set_io -nowarn o_auxrx
+#set_io -nowarn o_auxtx
+#set_io -nowarn o_auxcts
+#set_io -nowarn o_auxrts
+set_io -nowarn o_full 26 #pmod12 18b

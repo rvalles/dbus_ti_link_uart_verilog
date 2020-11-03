@@ -23,6 +23,8 @@ Features
 * MIT license. Refer to LICENSE file.
 
 Tested FPGA boards
+* BlackIce Mx
+  * No UART from stm32 as it is hardcoded to 115200 and doesn't do RTS/CTS.
 * iCEstick
 * iCESugar
   * This board builtin UART through stm32 does not do RTS/CTS.

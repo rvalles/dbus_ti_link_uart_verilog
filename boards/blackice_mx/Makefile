@@ -1,0 +1,12 @@
+programmer = icecore
+pcf = boards/blackice_mx/blackice_mx.pcf
+chip = hx8k
+package = tq144:4k
+MHz = 25
+dbusMHz = 5
+uartrxbufpow2 = 14
+uarttxbufpow2 = 3
+#uartmirror = y
+uartrate = 115200
+hwflow = y
+invleds = y
