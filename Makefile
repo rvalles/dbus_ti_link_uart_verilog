@@ -72,6 +72,10 @@ endif
 ifeq ($(programmer),icesprog)
 	icesprog -w main.bin
 endif
+ifeq ($(programmer),icecore)
+	stty -F /dev/ttyACM0 raw
+	cat main.bin >/dev/ttyACM0
+endif
 .PHONY: warmboot
 warmboot:
 	@echo "***** Warm boot..."
