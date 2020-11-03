@@ -173,13 +173,15 @@ module main (
 		.o_full (w_uartfull),
 		.o_nearfull (w_uartnearfull)
 		);
-	assign o_full = w_uartfull;
-	assign o_dbusreset = w_dbusreset;
-`ifdef icesugar //Leds of this board are lit by drive low.
+`ifdef invleds //Leds of some boards are lit by drive low.
+	assign o_full = w_uartfull?1'b0:1'bZ;
+	assign o_dbusreset = w_dbusreset?1'b0:1'bZ;
     assign o_dbusreceiving = w_dbusreceiving?1'b0:1'bZ;
     assign o_dbusbusy = w_dbusbusy?1'b0:1'bZ;
 	assign o_nearfull = w_uartnearfull?1'b0:1'bZ;
 `else
+	assign o_full = w_uartfull;
+	assign o_dbusreset = w_dbusreset;
     assign o_dbusreceiving = w_dbusreceiving;
     assign o_dbusbusy = w_dbusbusy;
 	assign o_nearfull = w_uartnearfull;

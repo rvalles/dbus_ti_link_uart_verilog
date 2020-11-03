@@ -10,3 +10,4 @@ dbusMHz = 6
 uartrxbufpow2 = 13
 uarttxbufpow2 = 12
 uartrate = 57600
+invleds = y

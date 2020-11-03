@@ -23,6 +23,9 @@ endif
 ifdef hwflow
 synth_macros += -Dhwflow=y
 endif
+ifdef invleds
+synth_macros += -Dinvleds=y
+endif
 nextpnr_target = --$(chip) --package $(package)
 yosys_synthflags = -abc2
 .PHONY: all
