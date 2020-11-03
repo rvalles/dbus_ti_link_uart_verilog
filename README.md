@@ -36,7 +36,9 @@ Recommendations
 * TI-89, TI-92+ or Voyage 200 are fast enough to take advantage of this.
   * These calculators work reliably with dbus running higher than default, at 8+ MHz.
   * This is unnecessary. Performance benefits are negligible.
-* Be careful with FPGA i/o pin tolerance. TI dbus is maintained at 3.3v.
+* Be careful with FPGA i/o pin tolerance.
+  * TI dbus is maintained at 3.3v with m68k calcs.
+  * TI dbus is at 5v (!) on some z80 calcs, including TI-86.
 * Edit Makefile to uncomment or add fpga board.
 * Edit board PCF to suit board board and preference.
 * Preferably connect 2.5mm jack sleeve to GND rather than o_sleeve.
