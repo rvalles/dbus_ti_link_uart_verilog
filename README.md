@@ -43,6 +43,8 @@ Recommendations
 * Edit board PCF to suit board board and preference.
 * Preferably connect 2.5mm jack sleeve to GND rather than o_sleeve.
 * Use pullup resistors (10kΩ suggested) on dbus tip/ring.
+* Link68 pretty much just works:
+  * https://github.com/jherning/link68
 * If using tilp/libticables2:
   * No support for plain uart. Pretend it's a grey cable.
   * Patch grey cable for the uart device/rate/hwflow.
