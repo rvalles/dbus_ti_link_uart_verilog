@@ -1,0 +1,25 @@
+# https://github.com/tinyvision-ai-inc/pico-ice-sdk/blob/main/rtl/pico_ice.pcf
+
+# RP2040 generates 12 MHz clock on GPIO24 to FPGA 35
+set_io i_clock 35
+
+# UART wired from FPGA to RP2040 GPIO0/1
+set_io i_rx 27 # UART RX
+set_io o_tx 25 # UART TX
+
+# ICE PMOD1 (near RGB LED)
+# Top: [ 3V3 GND 31  34  38  43  ]
+# Bot: [ 3V3 GND 28* 32* 36  42  ]
+set_io io_tip 32
+set_io io_ring 28
+set_io o_sleeve 42 # unused
+
+# R/G/B LED, active-low = 41/39/40
+set_io -nowarn o_dbusreset 41     # Red LED
+set_io -nowarn o_dbusbusy 39      # Green LED
+set_io -nowarn o_dbusreceiving 40 # Blue LED
+
+# route to unused Pmod pins in top row
+set_io -nowarn o_full 31
+set_io -nowarn o_dbusdrive 34
+set_io -nowarn o_nearfull 38

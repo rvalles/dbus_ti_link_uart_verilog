@@ -1,0 +1,11 @@
+programmer = dfu-util
+pcf = boards/pico_ice/pico_ice.pcf
+chip = up5k
+package = sg48
+MHz = 12
+dbusMHz = 6
+uartrxbufpow2 = 13
+uarttxbufpow2 = 3
+#uartmirror = y
+uartrate = 115200
+invleds = y
