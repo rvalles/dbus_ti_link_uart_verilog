@@ -30,6 +30,8 @@ Tested FPGA boards
   * This board builtin UART through stm32 does not do RTS/CTS.
   * UART limited to 57600bps as workaround.
 * TinyFPGA BX
+* [pico-ice](https://pico-ice.tinyvision.ai/)
+  * This board uses RP2040 which provides USB UART without RTS/CTS, but FW could be modified to support flow control
 * (...)
 
 Recommendations

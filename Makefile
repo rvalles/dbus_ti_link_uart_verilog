@@ -52,7 +52,7 @@ main.txt: main.json $(pcf)
 	nextpnr-ice40 --asc main.txt --top main --json main.json --pcf $(pcf) --freq $(MHz) --quiet --log nextpnr.log $(nextpnr_target) $(nextpnr_flags)
 icetime.json: main.txt $(pcf)
 	@echo "***** Timing analysis..."
-	icetime main.txt -c $(MHz) -j icetime.json $(icetime_flags)
+	icetime -c $(MHz) -j icetime.json $(icetime_flags) main.txt
 main.bin: main.txt
 	@echo "***** Packing..."
 	icepack main.txt main.bin
@@ -75,6 +75,9 @@ endif
 ifeq ($(programmer),icecore)
 	stty -F /dev/ttyACM0 raw
 	cat main.bin >/dev/ttyACM0
+endif
+ifeq ($(programmer),dfu-util)
+	dfu-util --alt 0 --reset --download main.bin
 endif
 .PHONY: warmboot
 warmboot:
